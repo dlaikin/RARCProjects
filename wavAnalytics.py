@@ -5,7 +5,7 @@ import wave
 import sys
 import matplotlib.pyplot as plt
 import numpy
-
+#comment
 
 class Point:
     def __init__(self, x, y):
