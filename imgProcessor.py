@@ -7,15 +7,9 @@ import matplotlib.pyplot as plt
 
 fs, data = wav.read('wavfile8.wav')
 data_crop = data[20*fs:21*fs]
-plt.figure(figsize=(12,4))
-plt.plot(data_crop)
-plt.xlabel("Samples")
-plt.ylabel("Amplitude")
-plt.title("Signal")
-plt.show()
-resample = 4
+resample = 6
 data = data[::resample]
-fs = fs//resample
+fs = fs/resample
 
 def hilbert(data):
     analytical_signal = signal.hilbert(data)
@@ -25,22 +19,22 @@ def hilbert(data):
 data_am = hilbert(data)
 
 
-frame_width = int(0.5*fs)
-w, h = frame_width, data_am.shape[0]//frame_width
+width = int(fs/2)
+w, h = width, int(data_am.shape[0]/width)
 image = Image.new('RGB', (w, h))
-px, py = 0, 0
+x, y = 0, 0
 for p in range(data_am.shape[0]):
-    lum = int(data_am[p]//32 - 32)
+    lum = int(data_am[p]/32 - 32)
     if lum < 0: lum = 0
     if lum > 255: lum = 255
-    image.putpixel((px, py), (0, lum, 0))
-    px += 1
-    if px >= w:
-        if (py % 50) == 0:
-            print(f"Line saved {py} of {h}")
-        px = 0
-        py += 1
-        if py >= h:
+    image.putpixel((x, y), (lum, lum, lum))
+    x += 1
+    if x >= w:
+        if (y % 50) == 0:
+            print(f"Line saved {y} of {h}")
+        x = 0
+        y += 1
+        if y >= h:
             break
 image = image.resize((w, 4*h))
 plt.imshow(image)

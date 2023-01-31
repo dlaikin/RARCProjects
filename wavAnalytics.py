@@ -34,6 +34,35 @@ def showBasic(path: str):
     plt.show()
 
 
+def showReduced(path: str):
+    file = wave.open(path)
+    signal = file.readframes(-1)
+    signal = numpy.frombuffer(signal, dtype="int16")
+    f_rate = file.getframerate()
+
+    max = 0
+    for index in signal:
+        if index > max:
+            max = index
+    print(max)
+    xVals = []
+    yVals = []
+    count = 0
+    for index in signal:
+        count += 1
+        if index >= max*0.95 and index%max != 0:
+            xVals.append(count)
+            print(index%max)
+            yVals.append(index%max)
+
+    time = numpy.linspace(0, len(signal) / f_rate, num=len(signal))
+
+    plt.figure(1)
+    plt.title("Sound Wave")
+    plt.xlabel("Time")
+    plt.plot(xVals, yVals)
+    plt.show()
+
 # you can also save
 # the plot using
 # plt.savefig('filename')
@@ -41,6 +70,6 @@ def showBasic(path: str):
 
 if __name__ == "__main__":
     # gets the command line Value
-    path = 'wavfile6.wav'
+    path = 'blip.wav'
 
-    showBasic(path)
+    showReduced(path)
